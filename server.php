@@ -23,7 +23,7 @@ while ( ($connect = socket_accept($soc)) == true ) {
 		$name = send_data_decode($send_info[1]);
 		$send_message = send_data_decode($send_info[2]);
 		$date = date("Y-m-d H:i:s");
-		file_put_contents("debug.txt", '['.$date.'] name: '.$name.', message: '.$send_message.ENDLINE, FILE_APPEND);
+		file_put_contents("chat_log.txt", '['.$date.'] name: '.$name.', message: '.$send_message.ENDLINE, FILE_APPEND);
 		$message_array = array(
 				"name"=>htmlspecialchars($name)
 				,"message"=>htmlspecialchars($send_message)
