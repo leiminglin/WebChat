@@ -1,4 +1,23 @@
 WebChat
 =======
 
-A web chat app based on php
+A web chat app based on PHP
+
+-- How to use WebChat?
+
+You should run the server.php first. like this:
+$ php server.php [press enter]
+# Then the socket server will be start. out put like this:
+port=10004
+server run. port=10004
+
+
+-- How to open WebChat in the browser?
+
+Please input http://youdomain.com/WebChatDir/ in the browser, press enter.
+You can chat with your friends in the webpage.
+
+
+-- How to config WebChat?
+
+Open the file config.php, then you can customize the port and IP.
