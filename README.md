@@ -18,6 +18,6 @@ Please input http://youdomain.com/WebChatDir/ in the browser, press enter.
 You can chat with your friends in the webpage.
 
 
-3. How to config WebChat?
+3. How to configure WebChat?
 
 Open the file config.php, then you can customize the port and IP.
