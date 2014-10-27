@@ -1,4 +1,14 @@
 <?php
+/**
+ * WebChat
+ * Copyright (c) 2014 http://lmlphp.com All rights reserved.
+ * Licensed ( http://mit-license.org/ )
+ * Author: leiminglin <leiminglin@126.com>
+ *
+ * A web chat app 
+ *
+ */
+
 ob_start();
 set_time_limit(0);
 require 'config.php';

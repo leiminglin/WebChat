@@ -1,4 +1,13 @@
 <?php
+/**
+ * WebChat
+ * Copyright (c) 2014 http://lmlphp.com All rights reserved.
+ * Licensed ( http://mit-license.org/ )
+ * Author: leiminglin <leiminglin@126.com>
+ *
+ * A web chat app 
+ *
+ */
 
 if(version_compare(PHP_VERSION,'5.4.0','<')) {
 	ini_set('magic_quotes_runtime',0);
