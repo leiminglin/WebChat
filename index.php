@@ -76,29 +76,32 @@ Nickname：<input type="text" value="小明" id="nickname" />&nbsp;Use Ctrl+Ente
 			data:'',
 			dataType:'json',
 			success:function(rs){
-				if(rs){
-					if (rs && typeof rs=='object') {
-					for (i in rs) {
-					var re = rs[i];
-					var str = '<span>['+re.date+']&nbsp;'+re.name+":</span>&nbsp;"+re.message;
-					$("#content").append( function(){
-							var chat = $("<div/>").addClass("wrap").append(str);
-							if( re.name == $("#nickname").val() ){
-								$('span', chat).css({"color":mycolor});
-							}
-							return chat;
-						}
-					).scrollTop($("#content")[0].scrollHeight);
-					}
-					}
-					send_request();
-				} else {
+				if (rs==null||rs.status!=undefined) {
+					$('h1').css({"color":"gray"});
 					setTimeout(function(){
 						send_request();
 					},1e4);
+				}else if(typeof rs=='object'){
+					$('h1').css({"color":"green"});
+					for (i in rs) {
+						var re = rs[i];
+						var str = '<span>['+re.date+']&nbsp;'+re.name+":</span>&nbsp;"+re.message;
+						$("#content").append( function(){
+								var chat = $("<div/>").addClass("wrap").append(str);
+								if( re.name == $("#nickname").val() ){
+									$('span', chat).css({"color":mycolor});
+								}
+								return chat;
+							}
+						).scrollTop($("#content")[0].scrollHeight);
+					}
+					send_request();
 				}
 			},
-			error:function(){
+			error:function(rs){
+				if (rs.status==504) {
+					$('h1').css({"color":"green"});
+				}
 				setTimeout(function(){
 					send_request();
 				},1e4);
