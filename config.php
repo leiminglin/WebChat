@@ -1,4 +1,37 @@
 <?php
+
+define('IS_CLI',PHP_SAPI=='cli'? 1 : 0);
+
+function isLogin() {
+        $passwd = 'cx'.date("Ymd");
+        $time = time();
+        $expire_time = $time+86400*7;
+        $domain = '';
+        $salt = 'lmlphp_881cefe8991daf2a10c3c67ae42d31145e77b265';
+        $token_name = 'lmlphp_token';
+        $input_name = 'lmlphp_passwd';
+        if (isset($_POST[$input_name]) && $_POST[$input_name] == $passwd) {
+                setcookie($token_name, md5($passwd.$salt.$time).'_'.$time, $expire_time, '/', $domain);
+                return true;
+        }
+        if (!isset($_COOKIE[$token_name])) {
+                echo '<meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"/><form method="post" action="">'.
+                '<input placeholder="passwd" type="password" name="'.$input_name.'"/>'.
+                '</form>';
+                return false;
+        } else {
+                $arr = explode('_', $_COOKIE[$token_name]);
+                if(count($arr) != 2 || $_COOKIE[$token_name] != md5($passwd.$salt.$arr[1]).'_'.$arr[1]) {
+                        return false;
+                }
+        }
+        return true;
+}
+
+if (!IS_CLI && !isLogin()) {
+	return;
+}
+
 /**
  * WebChat
  * Copyright (c) 2014 http://lmlphp.com All rights reserved.
@@ -36,6 +69,10 @@ $address = "127.0.0.1";
 
 $port = 10004;
 
+$chat_file = '29b176dc22c922c7e9ba8650155bef0d50af8fe0_chat_log.txt';
+
+$start_time = time();
+
 // 分隔符
 define('SPLIT', ":");
 
@@ -52,7 +89,7 @@ define('ENTITIES_IDENTIFIER_ENTITY', "&amp;");
 define('SPLIT_ENTITY', "&split;"); 
 
 // 换行符实体内容， 用于自定义协议发送内容处理
-define('ENDLINE_ENTITY', "&endline"); 
+define('ENDLINE_ENTITY', "&endline;"); 
 
 date_default_timezone_set('PRC');
 

@@ -1,11 +1,16 @@
+<?php
+
+require 'config.php';
+
+?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>WebChat</title>
-<script type="text/javascript" src="http://lib.sinaapp.com/js/jquery/1.7.2/jquery.min.js"></script>
+<script type="text/javascript" src="https://lib.sinaapp.com/js/jquery/1.7.2/jquery.min.js"></script>
 <script type="text/javascript">
-!window.jQuery && document.write('<script src=http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js><\/script>');
+!window.jQuery && document.write('<script src=https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js><\/script>');
 </script>
 </head>
 <style>
@@ -16,14 +21,14 @@ body{
 #content{
 	border:1px solid #ccc;
 	height:250px;
-	width:450px;
 	overflow:auto;
 	margin-bottom:20px;
 	padding:0 5px;
 }
 #sendtext{
-	width:450px;
+	width:100%;
 	padding:2px 5px;
+	box-sizing:border-box;
 }
 .wrap { 
 	table-layout:fixed; 
@@ -55,9 +60,7 @@ body{
 <div class="middle">
 Nickname：<input type="text" value="小明" id="nickname" />&nbsp;Use Ctrl+Enter to send message
 </div>
-<textarea rows="4" cols="50" id="sendtext" >
-
-</textarea>
+<textarea rows="4" cols="50" id="sendtext" ></textarea>
 <input type="button" value="send" id="send"/>
 <script type="text/javascript">
 (function(){
@@ -72,20 +75,33 @@ Nickname：<input type="text" value="小明" id="nickname" />&nbsp;Use Ctrl+Ente
 			type:'post',
 			data:'',
 			dataType:'json',
-			success:function(re){
-				var str = '<span>['+re.date+']&nbsp;'+re.name+":</span>&nbsp;"+re.message;
-				$("#content").append( function(){
-						var chat = $("<div/>").addClass("wrap").append(str);
-						if( re.name == $("#nickname").val() ){
-							$('span', chat).css({"color":mycolor});
+			success:function(rs){
+				if(rs){
+					if (rs && typeof rs=='object') {
+					for (i in rs) {
+					var re = rs[i];
+					var str = '<span>['+re.date+']&nbsp;'+re.name+":</span>&nbsp;"+re.message;
+					$("#content").append( function(){
+							var chat = $("<div/>").addClass("wrap").append(str);
+							if( re.name == $("#nickname").val() ){
+								$('span', chat).css({"color":mycolor});
+							}
+							return chat;
 						}
-						return chat;
+					).scrollTop($("#content")[0].scrollHeight);
 					}
-				).scrollTop($("#content")[0].scrollHeight);
-				send_request();
+					}
+					send_request();
+				} else {
+					setTimeout(function(){
+						send_request();
+					},1e4);
+				}
 			},
 			error:function(){
-				send_request();
+				setTimeout(function(){
+					send_request();
+				},1e4);
 			},
 		});
 	}
@@ -142,7 +158,6 @@ Nickname：<input type="text" value="小明" id="nickname" />&nbsp;Use Ctrl+Ente
 			},
 		});
 	});
-	
 })();
 </script>
 </body>

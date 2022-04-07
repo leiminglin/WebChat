@@ -25,33 +25,45 @@ if( socket_listen($soc) ) {
 	pln( 'server run. port='.$port);
 }
 
-while ( ($connect = socket_accept($soc)) == true ) {
-	$receive = socket_read($connect, 10000);
-	pln('recv='.$receive);
-	if( substr($receive, 0, 4) == 'send' ) {
-		$send_info = explode(SPLIT, $receive);
-		$name = send_data_decode($send_info[1]);
-		$send_message = send_data_decode($send_info[2]);
-		$date = date("Y-m-d H:i:s");
-		file_put_contents("chat_log.txt", '['.$date.'] name: '.$name.', message: '.$send_message.ENDLINE, FILE_APPEND);
-		$message_array = array(
+$get_chat = function($stime) use ($chat_file) {
+	$h = fopen($chat_file, 'r');
+	$ret = [];
+	while (!feof($h)) {
+		$line = fgets($h, 10000);
+		$date = substr($line, 1, 19);
+		$t = strtotime($date);
+		if ($t > $stime) {
+			$t_arr = explode(SPLIT, substr($line,20));
+			$name = send_data_decode($t_arr[1]);
+			$send_message = send_data_decode($t_arr[2]);
+			$ret[] = array(
 				"name"=>htmlspecialchars($name)
 				,"message"=>htmlspecialchars($send_message)
 				,'date'=>$date
-				);
-		$send_str = json_encode( $message_array );
+			);
+		}
+	}
+	return $ret;
+};
+
+$last_sendtime = time();
+
+while (true) {
+	$connect = socket_accept($soc);
+	$receive = socket_read($connect, 10000);
+	pln('recv='.$receive);
+	if (substr($receive, 0, 4) == 'send') {
+		socket_close($connect);
+		$send_str = json_encode($get_chat($last_sendtime));
 		pln('['.date("Y-m-d H:i:s").'] send content is:'.$send_str);
 		foreach ( $connect_list as $k=>$v ){
 			socket_write($v, $send_str);
 			unset($connect_list[$k]);
 		}
-		socket_close($connect);
-	}else{
+		$last_sendtime = time();
+	} elseif (substr($receive, 0, 4) == 'conn') {
 		$connect_list[] = $connect;
-		pln( 'add connect to list ,length='.count($connect_list));
+		pln('add connect to list, length='.count($connect_list));
 	}
+	usleep(10);
 }
-
-
-
-
