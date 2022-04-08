@@ -20,4 +20,9 @@ You can chat with your friends in the webpage.
 
 3. How to configure WebChat?
 
-Open the file config.php, then you can customize the port and IP.
+Open the file config.php, then you can customize the port and IP and chat file, and so on.
+
+
+4. Default password
+
+cx+8-digit date, eg: cx20220408

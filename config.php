@@ -1,13 +1,15 @@
 <?php
 
-define('IS_CLI',PHP_SAPI=='cli'? 1 : 0);
+$address = "127.0.0.1";
+$port = 10004;
+$chat_file = '29b176dc22c922c7e9ba8650155bef0d50af8fe0_chat_log.txt';
+$passwd = 'cx'.date("Ymd");
+$salt = 'lmlphp_881cefe8991daf2a10c3c67ae42d31145e77b265';
 
-function isLogin() {
-        $passwd = 'cx'.date("Ymd");
+$is_login = function() use ($passwd, $salt) {
         $time = time();
         $expire_time = $time+86400*7;
         $domain = '';
-        $salt = 'lmlphp_881cefe8991daf2a10c3c67ae42d31145e77b265';
         $token_name = 'lmlphp_token';
         $input_name = 'lmlphp_passwd';
         if (isset($_POST[$input_name]) && $_POST[$input_name] == $passwd) {
@@ -26,9 +28,11 @@ function isLogin() {
                 }
         }
         return true;
-}
+};
 
-if (!IS_CLI && !isLogin()) {
+define('IS_CLI',PHP_SAPI=='cli'? 1 : 0);
+
+if (!IS_CLI && !$is_login()) {
 	return;
 }
 
@@ -65,11 +69,6 @@ if( MAGIC_QUOTES_GPC ){
 	$_COOKIE = deep_stripslashes($_COOKIE);
 }
 
-$address = "127.0.0.1";
-
-$port = 10004;
-
-$chat_file = '29b176dc22c922c7e9ba8650155bef0d50af8fe0_chat_log.txt';
 
 $start_time = time();
 
