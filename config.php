@@ -33,7 +33,7 @@ $is_login = function() use ($passwd, $salt) {
 define('IS_CLI',PHP_SAPI=='cli'? 1 : 0);
 
 if (!IS_CLI && !$is_login()) {
-	return;
+	exit;
 }
 
 /**
