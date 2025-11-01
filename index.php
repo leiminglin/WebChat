@@ -150,12 +150,14 @@ Nickname：<input type="text" value="小明" id="nickname" />&nbsp;Use Ctrl+Ente
 			dataType:'html',
 			success:function(re){
 				self.flag.html("send success!").css({"display":"block"});
+			},
+			complete:function(){
 				timer = setTimeout(function(){
 					self.flag.css({"display":"none"});
 					self.disabled = false;
 					$("#sendtext").focus();
 				}, 400);
-			},
+			}
 			error:function(){
 				
 			},
